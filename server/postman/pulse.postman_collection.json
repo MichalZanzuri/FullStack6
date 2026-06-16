@@ -1,0 +1,125 @@
+{
+  "info": {
+    "name": "Pulse API (Express + MySQL)",
+    "_postman_id": "pulse-fullstack-6",
+    "description": "REST API for the Pulse app — פרק ו'. Run requests top-to-bottom: 'Login' stores a token in the {{token}} collection variable that the protected requests reuse. Base URL: {{baseUrl}} (default http://localhost:4000).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000" },
+    { "key": "token", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "lastTodoId", "value": "" },
+    { "key": "lastPostId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (good)",
+          "event": [
+            { "listen": "test", "script": { "exec": [
+              "const j = pm.response.json();",
+              "pm.test('200 OK', () => pm.response.to.have.status(200));",
+              "pm.test('returns a token', () => pm.expect(j.token).to.be.a('string'));",
+              "pm.test('never returns a password', () => pm.expect(j).to.not.have.any.keys('password','password_hash','website'));",
+              "pm.collectionVariables.set('token', j.token);",
+              "pm.collectionVariables.set('userId', j.id);"
+            ] } }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"shaked.h\",\n  \"password\": \"pulse123\"\n}" }
+          }
+        },
+        {
+          "name": "Login (bad -> 401)",
+          "event": [ { "listen": "test", "script": { "exec": [
+            "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+          ] } } ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"shaked.h\",\n  \"password\": \"wrong\"\n}" }
+          }
+        },
+        {
+          "name": "Register (POST /users)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"New User\",\n  \"username\": \"new_user_demo\",\n  \"email\": \"new@example.com\",\n  \"phone\": \"050-1112233\",\n  \"password\": \"demopass\"\n}" }
+          }
+        },
+        {
+          "name": "Username availability",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/username-available?username=shaked.h", "host": ["{{baseUrl}}"], "path": ["username-available"], "query": [ { "key": "username", "value": "shaked.h" } ] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/logout", "host": ["{{baseUrl}}"], "path": ["logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        { "name": "GET /users", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] } } },
+        { "name": "GET /users?username=", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/users?username=maya_c", "host": ["{{baseUrl}}"], "path": ["users"], "query": [ { "key": "username", "value": "maya_c" } ] } } },
+        { "name": "GET /users/:id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}"] } } },
+        { "name": "PATCH /users/:id (profile)", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}"] }, "body": { "mode": "raw", "raw": "{\n  \"phone\": \"050-9999999\"\n}" } } },
+        { "name": "PATCH /users/:id/password", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/users/{{userId}}/password", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}", "password"] }, "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"pulse123\",\n  \"newPassword\": \"pulse1234\"\n}" } } }
+      ]
+    },
+    {
+      "name": "Todos",
+      "item": [
+        { "name": "GET /todos?userId=&_sort=id", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/todos?userId={{userId}}&_sort=id", "host": ["{{baseUrl}}"], "path": ["todos"], "query": [ { "key": "userId", "value": "{{userId}}" }, { "key": "_sort", "value": "id" } ] } } },
+        { "name": "GET /todos (paginated)", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/todos?userId={{userId}}&_page=1&_per_page=5", "host": ["{{baseUrl}}"], "path": ["todos"], "query": [ { "key": "userId", "value": "{{userId}}" }, { "key": "_page", "value": "1" }, { "key": "_per_page", "value": "5" } ] } } },
+        { "name": "POST /todos", "event": [ { "listen": "test", "script": { "exec": [ "pm.collectionVariables.set('lastTodoId', pm.response.json().id);" ] } } ], "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/todos", "host": ["{{baseUrl}}"], "path": ["todos"] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"From Postman\",\n  \"completed\": false\n}" } } },
+        { "name": "PUT /todos/:id", "request": { "method": "PUT", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/todos/{{lastTodoId}}", "host": ["{{baseUrl}}"], "path": ["todos", "{{lastTodoId}}"] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated title\",\n  \"completed\": true\n}" } } },
+        { "name": "PATCH /todos/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/todos/{{lastTodoId}}", "host": ["{{baseUrl}}"], "path": ["todos", "{{lastTodoId}}"] }, "body": { "mode": "raw", "raw": "{\n  \"completed\": true\n}" } } },
+        { "name": "DELETE /todos/:id", "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/todos/{{lastTodoId}}", "host": ["{{baseUrl}}"], "path": ["todos", "{{lastTodoId}}"] } } }
+      ]
+    },
+    {
+      "name": "Posts & Comments",
+      "item": [
+        { "name": "GET /posts?userId=", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/posts?userId={{userId}}", "host": ["{{baseUrl}}"], "path": ["posts"], "query": [ { "key": "userId", "value": "{{userId}}" } ] } } },
+        { "name": "GET /posts (paginated)", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/posts?_page=1&_per_page=5", "host": ["{{baseUrl}}"], "path": ["posts"], "query": [ { "key": "_page", "value": "1" }, { "key": "_per_page", "value": "5" } ] } } },
+        { "name": "POST /posts", "event": [ { "listen": "test", "script": { "exec": [ "pm.collectionVariables.set('lastPostId', pm.response.json().id);" ] } } ], "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"Postman post\",\n  \"body\": \"hello from postman\"\n}" } } },
+        { "name": "PUT /posts/:id (owner only)", "request": { "method": "PUT", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/posts/{{lastPostId}}", "host": ["{{baseUrl}}"], "path": ["posts", "{{lastPostId}}"] }, "body": { "mode": "raw", "raw": "{\n  \"title\": \"Edited post\"\n}" } } },
+        { "name": "GET /comments?postId=", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/comments?postId={{lastPostId}}", "host": ["{{baseUrl}}"], "path": ["comments"], "query": [ { "key": "postId", "value": "{{lastPostId}}" } ] } } },
+        { "name": "POST /comments", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/comments", "host": ["{{baseUrl}}"], "path": ["comments"] }, "body": { "mode": "raw", "raw": "{\n  \"postId\": {{lastPostId}},\n  \"body\": \"nice post\"\n}" } } },
+        { "name": "DELETE /posts/:id (owner only, cascades comments)", "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/posts/{{lastPostId}}", "host": ["{{baseUrl}}"], "path": ["posts", "{{lastPostId}}"] } } }
+      ]
+    },
+    {
+      "name": "Albums & Photos",
+      "item": [
+        { "name": "GET /albums?userId=", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/albums?userId={{userId}}", "host": ["{{baseUrl}}"], "path": ["albums"], "query": [ { "key": "userId", "value": "{{userId}}" } ] } } },
+        { "name": "GET /photos?albumId=&paginated", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/photos?albumId=1&_page=1&_per_page=6", "host": ["{{baseUrl}}"], "path": ["photos"], "query": [ { "key": "albumId", "value": "1" }, { "key": "_page", "value": "1" }, { "key": "_per_page", "value": "6" } ] } } }
+      ]
+    },
+    {
+      "name": "Admin (login as admin first: shaked.h)",
+      "item": [
+        { "name": "GET /admin/stats", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/admin/stats", "host": ["{{baseUrl}}"], "path": ["admin", "stats"] } } },
+        { "name": "GET /admin/users", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/admin/users", "host": ["{{baseUrl}}"], "path": ["admin", "users"] } } },
+        { "name": "PATCH /users/:id/block", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ], "url": { "raw": "{{baseUrl}}/users/2/block", "host": ["{{baseUrl}}"], "path": ["users", "2", "block"] }, "body": { "mode": "raw", "raw": "{\n  \"blocked\": false\n}" } } }
+      ]
+    }
+  ]
+}

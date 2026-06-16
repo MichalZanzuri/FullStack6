@@ -1,0 +1,151 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--color-brand-gradient-soft);
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
+
+.heroPane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .heroPane {
+    padding: 32px 24px 0;
+  }
+}
+
+.formPane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.cardSubtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .formGrid { grid-template-columns: 1fr; }
+}
+
+.formError {
+  background: var(--color-error-bg);
+  border: 1px solid rgba(237, 73, 86, 0.3);
+  color: var(--color-error);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.cardFooter {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.link {
+  color: var(--color-brand-primary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+.link:hover { text-decoration: underline; }
+
+.helperBox {
+  background: rgba(225, 48, 108, 0.05);
+  border: 1px dashed rgba(225, 48, 108, 0.25);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  line-height: 1.5;
+}
+
+.helperBox code {
+  background: rgba(225, 48, 108, 0.08);
+  color: var(--color-brand-primary);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.steps {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.step {
+  width: 28px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--color-border);
+}
+.stepActive {
+  background: var(--color-brand-primary);
+}
+
+.actionRow {
+  display: flex;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 8px 0 4px;
+}

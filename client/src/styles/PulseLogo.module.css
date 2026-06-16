@@ -1,0 +1,116 @@
+.heroRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  position: relative;
+  padding: 24px 16px;
+}
+
+.heroFloat {
+  position: relative;
+  animation: float-up 0.9s ease-out both, heartbeat 3.5s ease-in-out 1.4s infinite;
+}
+
+.glow {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.25;
+  pointer-events: none;
+  background: linear-gradient(135deg, #FCAF45, #E1306C, #833AB4);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: float-up 0.9s ease-out 0.25s both;
+}
+
+.wordmark {
+  font-family: var(--font-family-display, Inter, system-ui, sans-serif);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+  background-image: linear-gradient(135deg, #FCAF45, #F77737, #E1306C, #C13584, #833AB4, #E1306C, #FCAF45);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 4s linear infinite;
+}
+
+.tagline {
+  color: rgba(193, 53, 132, 0.55);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin: 0;
+  animation: float-up 0.9s ease-out 0.5s both;
+}
+
+.mark { display: block; }
+.markAnimated {
+  display: block;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.pulseLine {
+  stroke-dasharray: 600;
+  animation: draw-pulse 2s ease-out 0.6s both;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(193, 53, 132, 0.10);
+  pointer-events: none;
+  animation: ring-pulse 5s ease-in-out infinite;
+}
+.ringOuter { width: 360px; height: 360px; }
+.ringInner {
+  width: 240px;
+  height: 240px;
+  animation-delay: 1s;
+  border-color: rgba(131, 58, 180, 0.10);
+}
+@media (min-width: 640px) {
+  .ringOuter { width: 480px; height: 480px; }
+  .ringInner { width: 340px; height: 340px; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 24px rgba(225, 48, 108, 0.35)) drop-shadow(0 0 60px rgba(131, 58, 180, 0.18)); }
+  50%      { filter: drop-shadow(0 0 40px rgba(225, 48, 108, 0.55)) drop-shadow(0 0 80px rgba(131, 58, 180, 0.30)); }
+}
+@keyframes float-up {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes text-shimmer {
+  0%   { background-position: -200%; }
+  100% { background-position:  200%; }
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.06); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.04); }
+  56% { transform: scale(1); }
+}
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.10; transform: scale(1); }
+  50%      { opacity: 0.18; transform: scale(1.06); }
+}
+@keyframes draw-pulse {
+  0%   { stroke-dashoffset: 600; }
+  100% { stroke-dashoffset: 0; }
+}

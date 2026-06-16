@@ -1,0 +1,107 @@
+.page {
+  max-width: var(--container-wide, 1100px);
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.title {
+  font-family: var(--font-family-display);
+  font-size: 1.6rem;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.sub {
+  color: var(--color-text-secondary);
+  margin: 0.25rem 0 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 720px) {
+  .stats { grid-template-columns: repeat(3, 1fr); }
+}
+.statCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  text-align: center;
+}
+.statValue {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-brand-primary);
+}
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tableWrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.table th, .table td {
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+.table th {
+  background: var(--color-surface-hover);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.table tr:last-child td { border-bottom: none; }
+.blockedRow { background: var(--color-error-bg); }
+.muted { color: var(--color-text-tertiary); }
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.badgeAdmin, .badgeUser, .badgeBlocked, .badgeActive {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.badgeAdmin { background: var(--color-info-bg); color: var(--color-info); }
+.badgeUser  { background: var(--color-surface-hover); color: var(--color-text-secondary); }
+.badgeBlocked { background: var(--color-error-bg); color: var(--color-error); }
+.badgeActive  { background: var(--color-success-bg); color: var(--color-success); }
+
+.loadMore {
+  max-width: 320px;
+  margin: 1.25rem auto;
+}
+.empty {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  padding: 3rem 1rem;
+}

@@ -1,0 +1,26 @@
+{
+  "name": "pulse-server",
+  "version": "2.0.0",
+  "description": "NodeJS + Express + MySQL server for the Pulse app (פרק ו')",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d",
+    "seed": "node scripts/seed.js",
+    "test:queries": "node scripts/test-queries.js",
+    "admin": "node scripts/make-admin.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.11.5"
+  },
+  "devDependencies": {
+    "json-server": "^1.0.0-beta.15"
+  }
+}
